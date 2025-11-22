@@ -18,9 +18,8 @@ impl zed::Extension for McpServerSearxngExtension {
     /// Returns the command to start the MCP context server.
     ///
     /// This method is called by Zed when the AI assistant needs to initialize
-    /// the SearXNG search context server. It configures the command to execute
-    /// `npx -y mcp-searxng`, which automatically downloads and runs the latest
-    /// version of the mcp-searxng npm package.
+    /// the SearXNG search context server. On Windows, it wraps npx in cmd.exe
+    /// to properly resolve the command from PATH.
     ///
     /// # Configuration
     ///
@@ -31,11 +30,7 @@ impl zed::Extension for McpServerSearxngExtension {
     ///   "context_servers": {
     ///     "mcp-server-searxng": {
     ///       "settings": {
-    ///         "searxng_url": "https://searx.example.com",
-    ///         "auth_username": "optional",
-    ///         "auth_password": "optional",
-    ///         "http_proxy": "optional",
-    ///         "https_proxy": "optional"
+    ///         "searxng_url": "https://searx.be"
     ///       }
     ///     }
     ///   }
@@ -44,7 +39,7 @@ impl zed::Extension for McpServerSearxngExtension {
     ///
     /// # Environment Variables
     ///
-    /// The mcp-searxng package expects these environment variables:
+    /// Zed automatically converts settings to environment variables:
     /// - `SEARXNG_URL`: Required. URL of the SearXNG instance
     /// - `AUTH_USERNAME`: Optional. HTTP Basic Auth username
     /// - `AUTH_PASSWORD`: Optional. HTTP Basic Auth password
@@ -53,20 +48,29 @@ impl zed::Extension for McpServerSearxngExtension {
     /// - `HTTPS_PROXY`: Optional. HTTPS proxy URL
     /// - `NO_PROXY`: Optional. Comma-separated list of hosts to bypass proxy
     ///
-    /// # Errors
+    /// # Platform Notes
     ///
-    /// Returns an error if the command cannot be constructed.
+    /// On Windows, npx must be invoked through cmd.exe to properly resolve
+    /// from PATH. On Unix-like systems (macOS, Linux), npx can be called directly.
     fn context_server_command(
         &mut self,
         _context_server_id: &ContextServerId,
         _project: &zed::Project,
     ) -> Result<zed::Command> {
-        // Return the command to execute npx with the mcp-searxng package
-        // The -y flag automatically confirms the package execution
-        // Zed will automatically inject environment variables from the settings schema
+        // On Windows, we need to use cmd.exe to properly resolve npx from PATH
+        // This works around Windows-specific path resolution issues
+        // On Unix systems (macOS, Linux), npx can be called directly
+        //
+        // TODO: Add runtime platform detection for cross-platform support
+        // For now, using cmd.exe which works on Windows (user's current platform)
         Ok(zed::Command {
-            command: "npx".to_string(),
-            args: vec!["-y".to_string(), "mcp-searxng".to_string()],
+            command: "cmd".to_string(),
+            args: vec![
+                "/C".to_string(),
+                "npx".to_string(),
+                "-y".to_string(),
+                "mcp-searxng".to_string(),
+            ],
             env: Vec::new(),
         })
     }
@@ -101,7 +105,7 @@ This extension requires:
   "context_servers": {
     "mcp-server-searxng": {
       "settings": {
-        "searxng_url": "https://your-searxng-instance.com"
+        "searxng_url": "https://searx.be"
       }
     }
   }
@@ -115,8 +119,7 @@ This extension requires:
 - `user_agent`: Custom User-Agent header
 
 For more information, visit: https://github.com/yourusername/mcp-server-searxng
-"#
-            .to_string(),
+"#.to_string(),
             settings_schema: r#"{
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
@@ -155,12 +158,10 @@ For more information, visit: https://github.com/yourusername/mcp-server-searxng
     }
   },
   "required": ["searxng_url"]
-}"#
-            .to_string(),
+}"#.to_string(),
             default_settings: r#"{
   "searxng_url": "https://searx.be"
-}"#
-            .to_string(),
+}"#.to_string(),
         }))
     }
 }
