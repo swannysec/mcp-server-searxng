@@ -64,7 +64,7 @@ impl zed::Extension for McpServerSearxngExtension {
         // TODO: Add runtime platform detection for cross-platform support
         // For now, using cmd.exe which works on Windows (user's current platform)
         Ok(zed::Command {
-            command: "cmd".to_string(),
+            command: "C:\\Windows\\System32\\cmd.exe".to_string(),
             args: vec![
                 "/C".to_string(),
                 "npx".to_string(),
