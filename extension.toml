@@ -1,0 +1,13 @@
+id = "mcp-server-searxng"
+name = "MCP Server: SearXNG"
+version = "0.1.0"
+schema_version = 1
+authors = ["Your Name <you@example.com>"]
+description = "Privacy-focused web search for Zed AI assistant via SearXNG instances. Search the web and read URLs without compromising privacy."
+repository = "https://github.com/yourusername/mcp-server-searxng"
+homepage = "https://docs.searxng.org"
+
+[mcp_servers.searxng]
+name = "SearXNG Search"
+command = "npx"
+args = ["-y", "mcp-searxng"]
