@@ -1,4 +1,3 @@
-use std::env;
 use zed_extension_api::{self as zed, ContextServerId, Result};
 
 /// MCP Server extension for SearXNG web search integration.
@@ -9,91 +8,6 @@ use zed_extension_api::{self as zed, ContextServerId, Result};
 /// The extension spawns the MCP server using npx, which executes the mcp-searxng
 /// package without requiring a global installation.
 struct McpServerSearxngExtension;
-
-impl McpServerSearxngExtension {
-    /// Validates that a SearXNG URL is properly formatted.
-    fn validate_searxng_url(url: &str) -> Result<()> {
-        if url.is_empty() {
-            return Err("SEARXNG_URL cannot be empty. Please configure it in your Zed settings.json under context_servers.mcp-server-searxng.settings.searxng_url".into());
-        }
-
-        if !url.starts_with("http://") && !url.starts_with("https://") {
-            return Err(format!(
-                "Invalid SEARXNG_URL: '{}'. URL must start with 'http://' or 'https://'. Example: 'https://searx.be'",
-                url
-            ));
-        }
-
-        if url.ends_with('/') {
-            return Err(format!(
-                "Invalid SEARXNG_URL: '{}'. URL should not end with a trailing slash. Use: '{}'",
-                url,
-                url.trim_end_matches('/')
-            ));
-        }
-
-        Ok(())
-    }
-
-    /// Checks if Node.js and npx are available in the system PATH.
-    fn check_nodejs_available() -> Result<()> {
-        // We can't directly check for npx in WASM, but we can provide helpful error message
-        // The actual check will happen when the command executes
-        // This is a placeholder for documentation purposes
-        Ok(())
-    }
-
-    /// Extracts settings from environment variables (set by Zed from settings.json)
-    fn build_environment_variables() -> Result<Vec<(String, String)>> {
-        let mut env_vars = Vec::new();
-
-        // SEARXNG_URL is required
-        if let Ok(searxng_url) = env::var("SEARXNG_URL") {
-            Self::validate_searxng_url(&searxng_url)?;
-            env_vars.push(("SEARXNG_URL".to_string(), searxng_url));
-        } else {
-            return Err("SEARXNG_URL environment variable not set.\n\n\
-                Please add this to your Zed settings.json:\n\n\
-                {\n\
-                  \"context_servers\": {\n\
-                    \"mcp-server-searxng\": {\n\
-                      \"settings\": {\n\
-                        \"searxng_url\": \"https://searx.be\"\n\
-                      }\n\
-                    }\n\
-                  }\n\
-                }\n\n\
-                Find public instances at: https://searx.space/"
-                .into());
-        }
-
-        // Optional: Authentication
-        if let Ok(username) = env::var("AUTH_USERNAME") {
-            env_vars.push(("AUTH_USERNAME".to_string(), username));
-        }
-        if let Ok(password) = env::var("AUTH_PASSWORD") {
-            env_vars.push(("AUTH_PASSWORD".to_string(), password));
-        }
-
-        // Optional: User-Agent
-        if let Ok(user_agent) = env::var("USER_AGENT") {
-            env_vars.push(("USER_AGENT".to_string(), user_agent));
-        }
-
-        // Optional: Proxy settings
-        if let Ok(http_proxy) = env::var("HTTP_PROXY") {
-            env_vars.push(("HTTP_PROXY".to_string(), http_proxy));
-        }
-        if let Ok(https_proxy) = env::var("HTTPS_PROXY") {
-            env_vars.push(("HTTPS_PROXY".to_string(), https_proxy));
-        }
-        if let Ok(no_proxy) = env::var("NO_PROXY") {
-            env_vars.push(("NO_PROXY".to_string(), no_proxy));
-        }
-
-        Ok(env_vars)
-    }
-}
 
 impl zed::Extension for McpServerSearxngExtension {
     /// Creates a new instance of the extension.
@@ -147,24 +61,13 @@ impl zed::Extension for McpServerSearxngExtension {
         _context_server_id: &ContextServerId,
         _project: &zed::Project,
     ) -> Result<zed::Command> {
-        // Validate and collect environment variables
-        let env_vars = Self::build_environment_variables().map_err(|e| {
-            format!(
-                "Failed to configure MCP Server: SearXNG\n\n{}\n\n\
-                For more help, see: https://github.com/yourusername/mcp-server-searxng#configuration",
-                e
-            )
-        })?;
-
-        // Check Node.js availability (informational)
-        Self::check_nodejs_available()?;
-
         // Return the command to execute npx with the mcp-searxng package
         // The -y flag automatically confirms the package execution
+        // Zed will automatically inject environment variables from the settings schema
         Ok(zed::Command {
             command: "npx".to_string(),
             args: vec!["-y".to_string(), "mcp-searxng".to_string()],
-            env: env_vars,
+            env: Vec::new(),
         })
     }
 
