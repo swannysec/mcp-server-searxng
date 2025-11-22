@@ -2,7 +2,7 @@
 
 ## What Was Fixed
 
-**Issue:** Extension loaded but MCP server didn't appear in Zed's Agent panel settings.
+**Issue 1:** Extension loaded but MCP server didn't appear in Zed's Agent panel settings.
 
 **Root Cause:** `extension.toml` was using incorrect `[mcp_servers.searxng]` format instead of `[context_servers.searxng]`.
 
@@ -10,6 +10,16 @@
 - Changed to correct `[context_servers.searxng]` format
 - Removed command/args from toml (handled by Rust code)
 - Committed in: `6f2e051 - fix: correct extension.toml to use context_servers format`
+
+**Issue 2:** MCP server visible in Agent panel but won't start.
+
+**Root Cause:** Rust code tried to read environment variables with `env::var()` in WASM context, but Zed doesn't set them there. Zed automatically injects settings from JSON schema when spawning the npx process.
+
+**Fix Applied:**
+- Removed all environment variable validation code
+- Return empty env vec - Zed handles injection automatically
+- Simplified to just return the npx command
+- Committed in: `ba20782 - fix: remove env var validation - let Zed inject settings automatically`
 
 ---
 
@@ -91,6 +101,7 @@ Your `settings.json` should still have:
 4. Wait for response
 
 **Expected Behavior:**
+- MCP server should start (check Agent panel - should show as running/connected)
 - AI should invoke `searxng_web_search` tool
 - Search results should appear
 - Results include titles, URLs, snippets
@@ -105,7 +116,8 @@ Your `settings.json` should still have:
 - [ ] Zed restarted
 - [ ] Extension reinstalled as dev extension
 - [ ] No errors in Zed logs
-- [ ] **"SearXNG Search" appears in Agent panel settings** ✨ (NEW!)
+- [ ] **"SearXNG Search" appears in Agent panel settings** ✨ (Fix 1)
+- [ ] **MCP server starts successfully** ✨ (Fix 2)
 - [ ] Configuration in settings.json is correct
 - [ ] Test 3 (Basic Search) now passes
 - [ ] AI can invoke `searxng_web_search` tool
@@ -173,11 +185,13 @@ Test 6 (Multiple Instances): [To be tested]
 After retesting, please report:
 
 1. **Does "SearXNG Search" now appear in Agent panel settings?** YES / NO
-2. **Test 3 result:** PASS / FAIL
-3. **If PASS:** Approximate search time in seconds
-4. **If FAIL:** 
+2. **Does MCP server start/connect successfully?** YES / NO (check status in Agent panel)
+3. **Test 3 result:** PASS / FAIL
+4. **If PASS:** Approximate search time in seconds
+5. **If FAIL:** 
    - Error messages from logs
    - What specifically didn't work
+   - Does server show as "starting" or "failed" in Agent panel?
    - Screenshots if helpful
 
 ---
