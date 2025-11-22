@@ -7,7 +7,5 @@ description = "Privacy-focused web search for Zed AI assistant via SearXNG insta
 repository = "https://github.com/yourusername/mcp-server-searxng"
 homepage = "https://docs.searxng.org"
 
-[mcp_servers.searxng]
+[context_servers.searxng]
 name = "SearXNG Search"
-command = "npx"
-args = ["-y", "mcp-searxng"]
