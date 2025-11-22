@@ -57,17 +57,15 @@ impl zed::Extension for McpServerSearxngExtension {
         _context_server_id: &ContextServerId,
         _project: &zed::Project,
     ) -> Result<zed::Command> {
-        // On Windows, we need to use cmd.exe to properly resolve npx from PATH
-        // This works around Windows-specific path resolution issues
-        // On Unix systems (macOS, Linux), npx can be called directly
+        // Call npx.cmd directly with full path to allow Zed to pass environment variables
+        // When called through cmd.exe /C, environment variables don't propagate properly
+        // Using the standard Node.js installation path on Windows
         //
         // TODO: Add runtime platform detection for cross-platform support
-        // For now, using cmd.exe which works on Windows (user's current platform)
+        // For now, using Windows Node.js default path (user's current platform)
         Ok(zed::Command {
-            command: "C:\\Windows\\System32\\cmd.exe".to_string(),
+            command: "C:\\Program Files\\nodejs\\npx.cmd".to_string(),
             args: vec![
-                "/C".to_string(),
-                "npx".to_string(),
                 "-y".to_string(),
                 "mcp-searxng".to_string(),
             ],
