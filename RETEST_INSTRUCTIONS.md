@@ -21,6 +21,18 @@
 - Simplified to just return the npx command
 - Committed in: `ba20782 - fix: remove env var validation - let Zed inject settings automatically`
 
+**Issue 3:** MCP server still won't start - "failed to spawn command" error on Windows.
+
+**Root Cause:** Zed tried to spawn `npx` directly but couldn't find it in PATH. On Windows, `npx` is actually `npx.cmd` (batch wrapper) and requires `cmd.exe` to execute properly.
+
+**Fix Applied:**
+- Changed command from "npx" to "cmd"
+- Args changed to: /C npx -y mcp-searxng
+- cmd.exe wrapper properly resolves npx.cmd from PATH
+- Committed in: `8058dea - fix: use cmd.exe wrapper for npx on Windows`
+
+**Note:** This fix is Windows-specific. macOS/Linux users would use npx directly.
+
 ---
 
 ## Steps to Reinstall and Retest
@@ -117,7 +129,7 @@ Your `settings.json` should still have:
 - [ ] Extension reinstalled as dev extension
 - [ ] No errors in Zed logs
 - [ ] **"SearXNG Search" appears in Agent panel settings** ✨ (Fix 1)
-- [ ] **MCP server starts successfully** ✨ (Fix 2)
+- [ ] **MCP server starts successfully - no spawn errors** ✨ (Fix 2 & 3)
 - [ ] Configuration in settings.json is correct
 - [ ] Test 3 (Basic Search) now passes
 - [ ] AI can invoke `searxng_web_search` tool
@@ -186,26 +198,31 @@ After retesting, please report:
 
 1. **Does "SearXNG Search" now appear in Agent panel settings?** YES / NO
 2. **Does MCP server start/connect successfully?** YES / NO (check status in Agent panel)
-3. **Test 3 result:** PASS / FAIL
-4. **If PASS:** Approximate search time in seconds
-5. **If FAIL:** 
-   - Error messages from logs
+3. **Any "failed to spawn command" errors in logs?** YES / NO
+4. **Test 3 result:** PASS / FAIL
+5. **If PASS:** Approximate search time in seconds
+6. **If FAIL:** 
+   - Error messages from logs (exact text)
    - What specifically didn't work
    - Does server show as "starting" or "failed" in Agent panel?
-   - Screenshots if helpful
+   - Check: Does `npx -y mcp-searxng` work in regular terminal?
 
 ---
 
 ## Next Steps
 
 **If Test 3 now passes:**
+- 🎉 All three critical bugs fixed!
 - Continue with Tests 4, 5, and optionally 6
 - Report all results when complete
 - We can then finalize Phase 3 and move to Phase 4!
 
 **If Test 3 still fails:**
-- Provide the requested debugging information above
+- Provide the exact error messages from logs
+- Try manually: `cmd /C npx -y mcp-searxng` with SEARXNG_URL set
 - I'll investigate further and provide another fix
+
+**Note:** This fix is for Windows. If you test on macOS/Linux later, the command would need to be just "npx" without cmd wrapper.
 
 ---
 
