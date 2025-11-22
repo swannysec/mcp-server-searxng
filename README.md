@@ -69,6 +69,8 @@ Open your Zed settings (`Cmd+,` or `Settings > Open Settings`):
 2. Start a new conversation
 3. The assistant should now have access to `searxng_web_search` and `web_url_read` tools
 
+> **Note:** Zed automatically converts settings from `settings.json` into environment variables that are passed to the MCP server. The extension validates these settings and provides helpful error messages if something is misconfigured.
+
 ## Configuration Examples
 
 ### Minimal Configuration (Public Instance)
@@ -272,6 +274,15 @@ cargo clippy --target wasm32-wasip2 -- -D warnings
 cargo fmt
 ```
 
+### Testing
+
+See [TESTING.md](TESTING.md) for comprehensive testing procedures including:
+- Manual testing guide with 17 test cases
+- Validation tests for URL formats and configuration
+- Integration tests for auth and proxy scenarios
+- Performance and regression testing procedures
+- Test report templates
+
 ### Testing Locally
 
 ```bash
@@ -280,6 +291,9 @@ cargo fmt
 
 # View logs
 # zed: open log (Cmd+Shift+P)
+
+# Run validation tests
+# See TESTING.md for detailed test cases
 ```
 
 ## Architecture
