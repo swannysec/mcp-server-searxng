@@ -53,23 +53,6 @@ impl zed::Extension for SearxngModelContextExtension {
             zed::npm_install_package(PACKAGE_NAME, &latest_version)?;
         }
 
-        // Read settings from Zed configuration
-        let settings = ContextServerSettings::for_project(CONTEXT_SERVER_ID, project)?;
-        let Some(settings) = settings.settings else {
-            return Err("missing `searxng_url` setting".into());
-        };
-        let settings: SearxngContextServerSettings =
-            serde_json::from_value(settings)
-                .map_err(|e| format!("Invalid settings format: {}. Please check your searxng_url and optional fields in Zed settings.", e))?;
-
-        // Validate searxng_url format
-        if !settings.searxng_url.starts_with("http://") && !settings.searxng_url.starts_with("https://") {
-            return Err(format!(
-                "searxng_url must start with http:// or https://. Got: '{}'. Please update your Zed settings.",
-                settings.searxng_url
-            ));
-        }
-
         // Get node binary path
         let node_path = zed::node_binary_path()?;
 
@@ -79,6 +62,32 @@ impl zed::Extension for SearxngModelContextExtension {
             .join(SERVER_PATH)
             .to_string_lossy()
             .to_string();
+
+        // Read settings from Zed configuration
+        let settings = ContextServerSettings::for_project(CONTEXT_SERVER_ID, project)?;
+
+        // If no settings configured yet, return a minimal command
+        // This allows Zed to show the configuration modal on first install
+        let Some(settings_value) = settings.settings else {
+            return Ok(Command {
+                command: node_path,
+                args: vec![server_path],
+                env: Vec::new(),
+            });
+        };
+
+        // Parse and validate settings
+        let settings: SearxngContextServerSettings =
+            serde_json::from_value(settings_value)
+                .map_err(|e| format!("Invalid settings format: {}. Please check your searxng_url and optional fields in Zed settings.", e))?;
+
+        // Validate searxng_url format
+        if !settings.searxng_url.starts_with("http://") && !settings.searxng_url.starts_with("https://") {
+            return Err(format!(
+                "searxng_url must start with http:// or https://. Got: '{}'. Please update your Zed settings.",
+                settings.searxng_url
+            ));
+        }
 
         // Build environment variables from settings
         let mut env_vars = vec![("SEARXNG_URL".into(), settings.searxng_url)];
