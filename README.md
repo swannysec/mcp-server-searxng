@@ -44,6 +44,9 @@ This Zed extension provides [Model Context Protocol (MCP)](https://modelcontextp
 - **Node.js**: Version 20 or higher (for npx)
 - **SearXNG Instance**: Self-hosted or public instance access
 
+## Disclosure
+This extension was coded primarily by AI agents as a learning exercise with care and intentionality including semi-automated code review for quality and security.  Use at your own risk.
+
 ## Installation
 
 ### 1. Install the Extension
