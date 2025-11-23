@@ -14,7 +14,7 @@ updates:
       interval: weekly
     commit-message:
       prefix: "deps:"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 5
     assignees:
       - "swannysec"
   - package-ecosystem: "cargo"
@@ -26,7 +26,7 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "deps:"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 5
     assignees:
       - "swannysec"
   - package-ecosystem: "npm"
@@ -38,6 +38,6 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "deps:"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 5
     assignees:
       - "swannysec"
