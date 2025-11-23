@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- **CRITICAL**: Implemented comprehensive URL validation using `url` crate to prevent URL injection, SSRF, and path traversal attacks
+- **CRITICAL**: Added validation to reject URLs with embedded credentials (use separate auth settings instead)
+- **CRITICAL**: Added validation to block localhost and RFC1918 private IP addresses to prevent SSRF attacks
+- **HIGH**: Implemented input sanitization for User-Agent header with character whitelist and 256-character limit
+- **HIGH**: Implemented input sanitization for proxy URLs with comprehensive validation
+- **HIGH**: Implemented input sanitization for NO_PROXY list with hostname validation
+- **HIGH**: Pinned npm package version to 0.4.1 to prevent supply chain attacks (was using "latest")
+- **MEDIUM**: Replaced `to_string_lossy()` with explicit UTF-8 validation to prevent silent path corruption
+- Added JsonSchema constraints (max length) on all string fields to prevent DoS attacks
+- Added GitHub Actions workflow for automated `cargo-audit` security scanning (weekly + on PR)
+- Added GitHub Actions workflow for Clippy security lints
+
+### Changed
+- WASM binary size increased from 133KB to 135KB due to URL validation dependencies (acceptable security tradeoff)
+- Extension now fails fast with clear error messages on invalid configuration instead of silently accepting bad input
+
+### Added
+- Comprehensive security documentation in README.md
+- Security warnings in installation_instructions.md about plaintext credential storage
+- Privacy guidance about public vs self-hosted SearXNG instances
+- Security Features section in README documenting all implemented controls
+
+### Documentation
+- Added security warnings about plaintext credential storage and process visibility
+- Added privacy considerations for public SearXNG instances
+- Added recommendation to use self-hosted instances without authentication
+- Documented supply chain security with version pinning approach
+
 ### Added
 - Initial Zed extension implementation for MCP Server: SearXNG
 - Core MCP server wrapper using Rust/WASM

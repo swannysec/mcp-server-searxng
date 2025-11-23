@@ -10,8 +10,27 @@ This Zed extension provides [Model Context Protocol (MCP)](https://modelcontextp
 - 🔍 **Web Search**: Search across multiple search engines via your SearXNG instance
 - 📄 **URL Reading**: Fetch and convert web pages to markdown for AI analysis
 - 🔒 **Privacy-First**: All searches go through YOUR configured SearXNG instance
-- ⚡ **Fast & Lightweight**: 177KB WASM binary, minimal overhead
+- ⚡ **Fast & Lightweight**: 133KB WASM binary, minimal overhead
 - 🛠️ **Flexible Configuration**: Support for authentication, proxies, and custom headers
+
+## ⚠️ Security & Privacy
+
+**Important Security Considerations:**
+
+### Credential Storage
+- **Plaintext Storage**: Authentication credentials (`auth_username`, `auth_password`) are stored **unencrypted** in your Zed `settings.json` file
+- **Process Visibility**: Credentials are passed as environment variables and may be visible in process lists (via `ps`, Task Manager, or similar tools)
+- **Recommendation**: Use self-hosted SearXNG instances **without authentication** when possible, or use a reverse proxy with authentication instead of HTTP Basic Auth
+
+### Privacy Considerations
+- **Public Instances**: Public SearXNG instances (like `searx.be`) may log your search queries. Check the instance's privacy policy before use
+- **Self-Hosted**: For maximum privacy, [self-host your own SearXNG instance](https://docs.searxng.org/admin/installation.html)
+- **Instance Selection**: Visit [searx.space](https://searx.space/) to find instances with clear privacy policies and no-logging commitments
+
+### Supply Chain Security
+- This extension uses **pinned version 0.4.1** of the `mcp-searxng` npm package for security
+- Updates require manual version changes and security review
+- The extension validates all configuration inputs to prevent injection attacks
 
 ## Requirements
 
@@ -89,6 +108,8 @@ Open your Zed settings (`Cmd+,` or `Settings > Open Settings`):
 
 ### Authenticated SearXNG Instance
 
+⚠️ **Security Warning**: Credentials are stored in plaintext in `settings.json` and visible in process environment. Only use this with trusted, self-hosted instances.
+
 For password-protected instances:
 
 ```json
@@ -162,6 +183,17 @@ Once configured, your AI assistant can use the search tools automatically:
 - "Read this URL and summarize: https://docs.searxng.org/"
 
 The assistant will automatically invoke the appropriate tools and incorporate search results into its responses.
+
+## Security Features
+
+This extension implements multiple security controls:
+
+- ✅ **URL Validation**: Comprehensive validation prevents URL injection, SSRF, and path traversal attacks
+- ✅ **Input Sanitization**: All user inputs (User-Agent, proxy URLs, etc.) are validated with strict character whitelists
+- ✅ **Version Pinning**: npm package version is pinned (0.4.1) to prevent supply chain attacks
+- ✅ **Schema Constraints**: Maximum length limits on all string fields to prevent DoS
+- ✅ **Private IP Blocking**: Localhost and RFC1918 private IPs are rejected to prevent SSRF
+- ✅ **No Unsafe Code**: Extension uses memory-safe Rust with zero unsafe blocks
 
 ## Troubleshooting
 

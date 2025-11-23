@@ -355,6 +355,7 @@ version = "0.1.0"
 dependencies = [
  "schemars",
  "serde",
+ "url",
  "zed_extension_api",
 ]
 
