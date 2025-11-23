@@ -1,16 +1,20 @@
 [package]
-name = "mcp-server-searxng"
+name = "mcp_server_searxng"
 version = "0.1.0"
 edition = "2021"
+publish = false
 license = "MIT"
 description = "Privacy-focused web search for Zed AI assistant via SearXNG instances"
 repository = "https://github.com/yourusername/mcp-server-searxng"
 
 [lib]
+path = "src/mcp_server_searxng.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
+serde = "1.0"
 zed_extension_api = "0.7.0"
+schemars = "0.8"
 
 [profile.release]
 opt-level = "z"

@@ -1,0 +1,23 @@
+{
+  /// URL of the SearXNG instance (required)
+  /// Find public instances at: https://searx.space/
+  "searxng_url": "https://searx.be",
+
+  /// Optional: HTTP Basic Auth username
+  // "auth_username": "your_username",
+
+  /// Optional: HTTP Basic Auth password
+  // "auth_password": "your_password",
+
+  /// Optional: Custom User-Agent header
+  // "user_agent": "MyApp/1.0",
+
+  /// Optional: HTTP proxy URL
+  // "http_proxy": "http://proxy.example.com:8080",
+
+  /// Optional: HTTPS proxy URL
+  // "https_proxy": "https://proxy.example.com:8080",
+
+  /// Optional: Comma-separated list of hosts to bypass proxy
+  // "no_proxy": "localhost,127.0.0.1,.example.com"
+}

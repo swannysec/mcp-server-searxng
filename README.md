@@ -1,4 +1,4 @@
-# MCP Server: SearXNG
+# SearXNG Search MCP Server
 
 Privacy-focused web search for Zed AI assistant via SearXNG instances. Search the web and read URLs without compromising your privacy.
 
@@ -10,7 +10,7 @@ This Zed extension provides [Model Context Protocol (MCP)](https://modelcontextp
 - 🔍 **Web Search**: Search across multiple search engines via your SearXNG instance
 - 📄 **URL Reading**: Fetch and convert web pages to markdown for AI analysis
 - 🔒 **Privacy-First**: All searches go through YOUR configured SearXNG instance
-- ⚡ **Fast & Lightweight**: 147KB WASM binary, minimal overhead
+- ⚡ **Fast & Lightweight**: 177KB WASM binary, minimal overhead
 - 🛠️ **Flexible Configuration**: Support for authentication, proxies, and custom headers
 
 ## Requirements
