@@ -6,7 +6,15 @@ This MCP server requires access to a SearXNG instance.
 
 **Privacy**: Public SearXNG instances may log your search queries. For maximum privacy, self-host your own instance.
 
+**SSRF Protection**: By default, localhost and private IP addresses are **allowed** (`allow_private_instances: true`) to support self-hosted SearXNG instances. Set to `false` only in untrusted/shared environments.
+
 **Recommendation**: Use self-hosted instances **without authentication** when possible, or use a reverse proxy with authentication instead of HTTP Basic Auth.
+</text>
+
+<old_text line=20>
+2. Configure the instance URL in your Zed settings (required)
+
+**Optional:** Configure authentication, proxy settings, or custom User-Agent if needed (see security notice above).
 
 ## Setup Instructions
 

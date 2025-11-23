@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **CRITICAL**: Fixed extension timeout on localhost/private SearXNG instances caused by overly strict SSRF protection
+- Added `allow_private_instances` setting (default: `true`) to make SSRF protection configurable
+- Default behavior now allows self-hosted SearXNG instances on localhost and private networks (most common use case)
+- Users in shared/untrusted environments can set `allow_private_instances: false` for strict SSRF protection
+
 ### Security
 - **CRITICAL**: Implemented comprehensive URL validation using `url` crate to prevent URL injection, SSRF, and path traversal attacks
 - **CRITICAL**: Added validation to reject URLs with embedded credentials (use separate auth settings instead)

@@ -19,6 +19,9 @@ struct SearxngContextServerSettings {
     /// URL of the SearXNG instance (required)
     #[schemars(length(max = 2048))]
     searxng_url: String,
+    /// Allow private/localhost instances (default: true for self-hosted setups)
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    allow_private_instances: Option<bool>,
     /// HTTP Basic Auth username (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schemars(length(max = 256))]
@@ -46,7 +49,7 @@ struct SearxngContextServerSettings {
 }
 
 /// Validates a SearXNG instance URL for security
-fn validate_searxng_url(url_str: &str) -> Result<()> {
+fn validate_searxng_url(url_str: &str, allow_private: bool) -> Result<()> {
     let url = Url::parse(url_str)
         .map_err(|e| format!("Invalid URL format: {}. Please provide a valid http:// or https:// URL.", e))?;
 
@@ -60,34 +63,36 @@ fn validate_searxng_url(url_str: &str) -> Result<()> {
         return Err("URLs with embedded credentials are not allowed. Use auth_username and auth_password settings instead.".to_string());
     }
 
-    // Reject localhost/private IPs to prevent SSRF attacks
-    if let Some(host) = url.host_str() {
-        let host_lower = host.to_lowercase();
-        if host_lower == "localhost"
-            || host_lower.starts_with("127.")
-            || host_lower.starts_with("192.168.")
-            || host_lower.starts_with("10.")
-            || host_lower.starts_with("172.16.")
-            || host_lower.starts_with("172.17.")
-            || host_lower.starts_with("172.18.")
-            || host_lower.starts_with("172.19.")
-            || host_lower.starts_with("172.20.")
-            || host_lower.starts_with("172.21.")
-            || host_lower.starts_with("172.22.")
-            || host_lower.starts_with("172.23.")
-            || host_lower.starts_with("172.24.")
-            || host_lower.starts_with("172.25.")
-            || host_lower.starts_with("172.26.")
-            || host_lower.starts_with("172.27.")
-            || host_lower.starts_with("172.28.")
-            || host_lower.starts_with("172.29.")
-            || host_lower.starts_with("172.30.")
-            || host_lower.starts_with("172.31.")
-            || host_lower == "0.0.0.0"
-            || host_lower.starts_with("[::1]")
-            || host_lower.starts_with("[::")
-        {
-            return Err(format!("Private/localhost URLs are not allowed for security reasons. Got: {}. Please use a publicly accessible SearXNG instance.", host));
+    // Reject localhost/private IPs to prevent SSRF attacks (configurable)
+    if !allow_private {
+        if let Some(host) = url.host_str() {
+            let host_lower = host.to_lowercase();
+            if host_lower == "localhost"
+                || host_lower.starts_with("127.")
+                || host_lower.starts_with("192.168.")
+                || host_lower.starts_with("10.")
+                || host_lower.starts_with("172.16.")
+                || host_lower.starts_with("172.17.")
+                || host_lower.starts_with("172.18.")
+                || host_lower.starts_with("172.19.")
+                || host_lower.starts_with("172.20.")
+                || host_lower.starts_with("172.21.")
+                || host_lower.starts_with("172.22.")
+                || host_lower.starts_with("172.23.")
+                || host_lower.starts_with("172.24.")
+                || host_lower.starts_with("172.25.")
+                || host_lower.starts_with("172.26.")
+                || host_lower.starts_with("172.27.")
+                || host_lower.starts_with("172.28.")
+                || host_lower.starts_with("172.29.")
+                || host_lower.starts_with("172.30.")
+                || host_lower.starts_with("172.31.")
+                || host_lower == "0.0.0.0"
+                || host_lower.starts_with("[::1]")
+                || host_lower.starts_with("[::")
+            {
+                return Err(format!("Private/localhost URLs are not allowed when allow_private_instances is false. Got: {}. Set allow_private_instances: true in settings to use self-hosted instances.", host));
+            }
         }
     }
 
@@ -213,7 +218,9 @@ impl zed::Extension for SearxngModelContextExtension {
                 .map_err(|e| format!("Invalid settings format: {}. Please check your searxng_url and optional fields in Zed settings.", e))?;
 
         // Validate searxng_url with comprehensive security checks
-        validate_searxng_url(&settings.searxng_url)?;
+        // Default to true for self-hosted SearXNG instances (most common use case)
+        let allow_private = settings.allow_private_instances.unwrap_or(true);
+        validate_searxng_url(&settings.searxng_url, allow_private)?;
 
         // Validate optional fields before using them
         if let Some(ref ua) = settings.user_agent {

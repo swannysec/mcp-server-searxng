@@ -3,6 +3,12 @@
   /// Find public instances at: https://searx.space/
   "searxng_url": "https://searx.be",
 
+  /// Optional: Allow localhost/private IP instances (default: true)
+  /// Set to true (default) to allow self-hosted SearXNG on localhost or private networks
+  /// Set to false for strict SSRF protection (only public instances allowed)
+  /// Most users should leave this as true for self-hosted instances
+  // "allow_private_instances": true,
+
   /// Optional: HTTP Basic Auth username
   // "auth_username": "your_username",
 

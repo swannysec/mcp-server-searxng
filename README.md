@@ -27,6 +27,12 @@ This Zed extension provides [Model Context Protocol (MCP)](https://modelcontextp
 - **Self-Hosted**: For maximum privacy, [self-host your own SearXNG instance](https://docs.searxng.org/admin/installation.html)
 - **Instance Selection**: Visit [searx.space](https://searx.space/) to find instances with clear privacy policies and no-logging commitments
 
+### SSRF Protection (Configurable)
+- **Default Behavior**: Allows localhost and private IP addresses (`allow_private_instances: true`) to support self-hosted SearXNG instances
+- **Strict Mode**: Set `allow_private_instances: false` to block localhost/RFC1918 private IPs and enforce SSRF protection
+- **When to Use Strict Mode**: Only needed in shared/untrusted environments where malicious users might attempt SSRF attacks
+- **Self-Hosted Users**: Keep the default `true` setting to access your local SearXNG instance
+
 ### Supply Chain Security
 - This extension uses **pinned version 0.4.1** of the `mcp-searxng` npm package for security
 - Updates require manual version changes and security review
@@ -106,6 +112,23 @@ Open your Zed settings (`Cmd+,` or `Settings > Open Settings`):
 }
 ```
 
+### Self-Hosted Configuration (Localhost)
+
+```json
+{
+  "context_servers": {
+    "mcp-server-searxng": {
+      "settings": {
+        "searxng_url": "http://localhost:8080",
+        "allow_private_instances": true
+      }
+    }
+  }
+}
+```
+
+**Note:** `allow_private_instances` defaults to `true`, so you can omit it for localhost instances.
+
 ### Authenticated SearXNG Instance
 
 ⚠️ **Security Warning**: Credentials are stored in plaintext in `settings.json` and visible in process environment. Only use this with trusted, self-hosted instances.
@@ -125,6 +148,25 @@ For password-protected instances:
   }
 }
 ```
+
+### Strict SSRF Protection (Shared Environments)
+
+If running in an untrusted environment where you need strict SSRF protection:
+
+```json
+{
+  "context_servers": {
+    "mcp-server-searxng": {
+      "settings": {
+        "searxng_url": "https://public-searxng-instance.com",
+        "allow_private_instances": false
+      }
+    }
+  }
+}
+```
+
+**Note:** This blocks localhost and private IP addresses. Most users should **not** use this setting.
 
 ⚠️ **Security Note**: Credentials are stored in your local Zed settings file. Use environment-specific credentials, not personal passwords.
 
@@ -192,7 +234,7 @@ This extension implements multiple security controls:
 - ✅ **Input Sanitization**: All user inputs (User-Agent, proxy URLs, etc.) are validated with strict character whitelists
 - ✅ **Version Pinning**: npm package version is pinned (0.4.1) to prevent supply chain attacks
 - ✅ **Schema Constraints**: Maximum length limits on all string fields to prevent DoS
-- ✅ **Private IP Blocking**: Localhost and RFC1918 private IPs are rejected to prevent SSRF
+- ✅ **Configurable SSRF Protection**: Optional blocking of localhost/RFC1918 private IPs (disabled by default for self-hosted use)
 - ✅ **No Unsafe Code**: Extension uses memory-safe Rust with zero unsafe blocks
 
 ## Troubleshooting
