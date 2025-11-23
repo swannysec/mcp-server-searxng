@@ -8,15 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **CRITICAL**: Fixed extension timeout caused by outdated npm package version (0.4.1 from April 2025)
+- Updated mcp-searxng npm package from 0.4.1 to 0.8.0 (latest stable, Nov 2025)
 - **CRITICAL**: Fixed extension timeout on localhost/private SearXNG instances caused by overly strict SSRF protection
 - Added `allow_private_instances` setting (default: `true`) to make SSRF protection configurable
 - Default behavior now allows self-hosted SearXNG instances on localhost and private networks (most common use case)
 - Users in shared/untrusted environments can set `allow_private_instances: false` for strict SSRF protection
 
+### Changed
+- Updated pinned npm package version from 0.4.1 to 0.8.0 (latest stable release)
+- Version pinning maintained for security but now uses actively maintained version
+
 ### Security
 - **CRITICAL**: Implemented comprehensive URL validation using `url` crate to prevent URL injection, SSRF, and path traversal attacks
 - **CRITICAL**: Added validation to reject URLs with embedded credentials (use separate auth settings instead)
-- **CRITICAL**: Added validation to block localhost and RFC1918 private IP addresses to prevent SSRF attacks
+- **CRITICAL**: Added configurable SSRF protection (allow_private_instances setting, default: true)
+</text>
+
 - **HIGH**: Implemented input sanitization for User-Agent header with character whitelist and 256-character limit
 - **HIGH**: Implemented input sanitization for proxy URLs with comprehensive validation
 - **HIGH**: Implemented input sanitization for NO_PROXY list with hostname validation

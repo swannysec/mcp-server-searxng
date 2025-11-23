@@ -8,7 +8,7 @@ use zed_extension_api::{
 };
 
 const PACKAGE_NAME: &str = "mcp-searxng";
-const PACKAGE_VERSION: &str = "0.4.1"; // Pinned version for security - update after review
+const PACKAGE_VERSION: &str = "0.8.0"; // Pinned version - updated from 0.4.1 which caused timeouts
 const SERVER_PATH: &str = "node_modules/mcp-searxng/dist/index.js";
 const CONTEXT_SERVER_ID: &str = "mcp-server-searxng";
 

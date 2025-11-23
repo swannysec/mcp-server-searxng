@@ -34,7 +34,7 @@ This Zed extension provides [Model Context Protocol (MCP)](https://modelcontextp
 - **Self-Hosted Users**: Keep the default `true` setting to access your local SearXNG instance
 
 ### Supply Chain Security
-- This extension uses **pinned version 0.4.1** of the `mcp-searxng` npm package for security
+- This extension uses **pinned version 0.8.0** of the `mcp-searxng` npm package for security
 - Updates require manual version changes and security review
 - The extension validates all configuration inputs to prevent injection attacks
 
@@ -232,7 +232,7 @@ This extension implements multiple security controls:
 
 - ✅ **URL Validation**: Comprehensive validation prevents URL injection, SSRF, and path traversal attacks
 - ✅ **Input Sanitization**: All user inputs (User-Agent, proxy URLs, etc.) are validated with strict character whitelists
-- ✅ **Version Pinning**: npm package version is pinned (0.4.1) to prevent supply chain attacks
+- ✅ **Version Pinning**: npm package version is pinned (0.8.0) to prevent supply chain attacks
 - ✅ **Schema Constraints**: Maximum length limits on all string fields to prevent DoS
 - ✅ **Configurable SSRF Protection**: Optional blocking of localhost/RFC1918 private IPs (disabled by default for self-hosted use)
 - ✅ **No Unsafe Code**: Extension uses memory-safe Rust with zero unsafe blocks
