@@ -2,6 +2,7 @@
 PRD/
 AGENTS.md
 context_portal/
+security_review/
 
 # Rust / Cargo
 target/
