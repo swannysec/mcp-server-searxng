@@ -623,4 +623,4 @@ Find public instances at: https://searx.space/
 - **Zed Extension Development**: https://zed.dev/docs/extensions/developing-extensions
 - **MCP Specification**: https://modelcontextprotocol.io/
 - **SearXNG Documentation**: https://docs.searxng.org/
-- **Extension Repository**: https://github.com/yourusername/mcp-server-searxng
+- **Extension Repository**: https://github.com/swannysec/mcp-server-searxng

@@ -337,7 +337,7 @@ This extension is licensed under the [MIT License](LICENSE).
 
 ## Links
 
-- **Extension Repository**: https://github.com/yourusername/mcp-server-searxng
+- **Extension Repository**: https://github.com/swannysec/mcp-server-searxng
 - **Zed Editor**: https://zed.dev/
 - **SearXNG Documentation**: https://docs.searxng.org/
 - **MCP Specification**: https://modelcontextprotocol.io/
@@ -346,8 +346,8 @@ This extension is licensed under the [MIT License](LICENSE).
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/mcp-server-searxng/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/mcp-server-searxng/discussions)
+- **Issues**: [GitHub Issues](https://github.com/swannysec/mcp-server-searxng/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/swannysec/mcp-server-searxng/discussions)
 - **Zed Community**: [Zed Discord](https://discord.gg/zed)
 
 ## Acknowledgments

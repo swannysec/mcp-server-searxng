@@ -145,7 +145,7 @@ Once working, explore:
 
 1. Check [README.md](README.md) troubleshooting section
 2. Review [TESTING.md](TESTING.md) for detailed test cases
-3. Open an issue: [GitHub Issues](https://github.com/yourusername/mcp-server-searxng/issues)
+3. Open an issue: [GitHub Issues](https://github.com/swannysec/mcp-server-searxng/issues)
 4. Join Zed Discord for community support
 
 ---

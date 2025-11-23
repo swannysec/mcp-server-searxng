@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 license = "MIT"
 description = "Privacy-focused web search for Zed AI assistant via SearXNG instances"
-repository = "https://github.com/yourusername/mcp-server-searxng"
+repository = "https://github.com/swannysec/mcp-server-searxng"
 
 [lib]
 path = "src/mcp_server_searxng.rs"

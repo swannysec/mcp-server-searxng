@@ -118,6 +118,6 @@ For contribution guidelines, see [README.md](README.md#contributing).
 
 ## Links
 
-- **Repository**: https://github.com/yourusername/mcp-server-searxng
-- **Issues**: https://github.com/yourusername/mcp-server-searxng/issues
+- **Repository**: https://github.com/swannysec/mcp-server-searxng
+- **Issues**: https://github.com/swannysec/mcp-server-searxng/issues
 - **Zed Extensions**: https://zed.dev/extensions
