@@ -1,0 +1,43 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    groups:
+      actions:
+        applies-to: security-updates
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "deps:"
+    open-pull-requests-limit: 0
+    assignees:
+      - "swannysec"
+  - package-ecosystem: "cargo"
+    groups:
+      cargo:
+        applies-to: security-updates
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps:"
+    open-pull-requests-limit: 0
+    assignees:
+      - "swannysec"
+  - package-ecosystem: "npm"
+    groups:
+      npm:
+        applies-to: security-updates
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps:"
+    open-pull-requests-limit: 0
+    assignees:
+      - "swannysec"
