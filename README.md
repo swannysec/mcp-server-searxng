@@ -395,15 +395,51 @@ Contributions welcome! Please:
 5. Run `cargo clippy` and `cargo fmt`
 6. Submit a pull request
 
-## Roadmap
+## Contributing New Search Functionality
 
-Future enhancements planned:
+This extension is designed to be modular and extensible. If you'd like to add support for additional search engines, here's how to maintain consistency with the existing architecture:
 
-- [ ] Support for additional search engines (DuckDuckGo, Google Custom Search)
-- [ ] Advanced result filtering
-- [ ] Search history with privacy controls
-- [ ] Image search support
-- [ ] Configurable result limits and pagination
+### Architecture Overview
+
+The extension follows a **wrapper pattern**:
+1. **Rust WASM Extension** (`src/mcp_server_searxng.rs`) - Handles settings, validation, and npm package management
+2. **npm MCP Server** (`mcp-searxng` package) - Implements the actual search logic and MCP protocol
+3. **Settings Schema** - JSON schema for Zed's configuration UI
+
+### Adding New Search Engines
+
+To add a new search engine while maintaining architectural consistency:
+
+1. **Fork the npm package** ([ihor-sokoliuk/mcp-searxng](https://github.com/ihor-sokoliuk/mcp-searxng))
+2. **Implement the search provider** in TypeScript following the existing pattern:
+   - Create a new provider module (e.g., `src/providers/duckduckgo.ts`)
+   - Implement the same interface as existing providers (search query → JSON results)
+   - Add configuration options to the MCP server settings
+3. **Update the Rust wrapper**:
+   - Add new settings fields to `SearxngContextServerSettings` struct
+   - Add validation for new provider-specific settings
+   - Update JSON schema with `#[schemars]` attributes
+4. **Update documentation**:
+   - Add configuration examples to README
+   - Document new settings in `default_settings.jsonc`
+   - Update `installation_instructions.md`
+
+### Design Principles
+
+- **Privacy-first**: All search providers should respect user privacy
+- **Validation**: All user inputs must be validated in the Rust wrapper
+- **Schema-driven**: Use JSON schema for type-safe configuration
+- **Error handling**: Provide clear, actionable error messages
+- **Testing**: Include examples and test cases
+
+### Pull Request Guidelines
+
+Contributions are welcome! Please:
+- Follow the existing code style and patterns
+- Include tests for new functionality
+- Update documentation
+- Ensure `cargo clippy` passes with no warnings
+- Test with a real Zed installation before submitting
 
 ## License
 
@@ -427,7 +463,8 @@ This extension is licensed under the [MIT License](LICENSE).
 ## Acknowledgments
 
 - [SearXNG Project](https://github.com/searxng/searxng) - Privacy-respecting metasearch engine
-- [mcp-searxng](https://github.com/ihor-sokoliuk/mcp-searxng) - MCP server implementation
+- [mcp-searxng](https://github.com/ihor-sokoliuk/mcp-searxng) - MCP server implementation by Ihor Sokoliuk
+- [mcp-server-brave-search](https://github.com/zed-extensions/mcp-server-brave-search) - Reference implementation for Zed MCP extensions
 - [Zed Industries](https://zed.dev/) - High-performance code editor
 - [Anthropic](https://www.anthropic.com/) - Model Context Protocol specification
 
